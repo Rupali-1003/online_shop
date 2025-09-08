@@ -8,7 +8,7 @@ pipeline{
         }
         stage('Build'){
             steps{
-                sh "docker buil -t online-shop ."
+                sh "docker build -t online-shop ."
             }
         }
         stage('Test'){
