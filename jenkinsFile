@@ -1,0 +1,54 @@
+pipeline{
+    agent {label 'dev'};
+    stages{
+        stage('Code'){
+           steps{
+                git url:"https://github.com/Rupali-1003/online_shop", branch:"Hackathon"
+           }
+        }
+        stage('Build'){
+            steps{
+                sh "docker build -t online-shop ."
+            }
+        }
+        stage('Test'){
+            steps{
+                echo "Tester will provide you the test cases"
+            }
+        }
+        stage('Pushed to Docker Hub'){
+            steps{withCredentials([usernamePassword(
+                    credentialsId: "dockerCred",
+                    usernameVariable: "dhubUsername",
+                    passwordVariable: "dhubPassword")]) {
+                     
+                     sh "docker login -u ${env.dhubUsername} -p ${env.dhubPassword}"
+                     sh "docker image tag online-shop ${env.dhubUsername}/online-shop:latest"
+                     sh "docker push ${env.dhubUsername}/online-shop:latest"
+                }
+                
+            }
+        }
+        stage('Deploy'){
+            steps{
+               sh "docker compose up -d"
+            }
+        }
+    }
+post {
+        success {
+            emailext( from: 'sharma.rupali1010@gmail.com' , 
+               to: 'sharma.rupali1010@gmail.com',
+               subject: 'GOOD NEWS:- Build successfull',
+               body: 'Build sucessfull for Deploy-flask-app')
+        }
+        failure {
+            emailext( from: 'sharma.rupali1010@gmail.com' , 
+               to: 'sharma.rupali1010@gmail.com',
+               subject: 'BAD NEWS:- Build Failed ',
+               body: 'Build Failed for Deploy-flask-app')
+            
+        }
+    }
+    
+}
