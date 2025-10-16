@@ -4,7 +4,7 @@ env:
   parameter-store:
     DOCKER_REGISTRY_USERNAME: /online-shop/docker/username
     DOCKER_REGISTRY_PASSWORD: /online-shop/docker/credentials
-    DOCKER_REGISTRY_URL: /myapp/docker-registry/url
+    DOCKER_REGISTRY_URL: /online-shop/docker-registry/url
 
 phases:
   install:
